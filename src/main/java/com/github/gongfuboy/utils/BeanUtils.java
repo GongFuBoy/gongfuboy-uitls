@@ -21,37 +21,6 @@ public class BeanUtils {
     private static final String XML_HEAD = "<xml>";
     private static final String XML_TAIL = "</xml>";
     private static final String SIGN = "_";
-    private static String[] args;
-
-    static class Temp {
-        private String fisrtName;
-
-        private String lastAge;
-
-        public String getFisrtName() {
-            return fisrtName;
-        }
-
-        public void setFisrtName(String fisrtName) {
-            this.fisrtName = fisrtName;
-        }
-
-        public String getLastAge() {
-            return lastAge;
-        }
-
-        public void setLastAge(String lastAge) {
-            this.lastAge = lastAge;
-        }
-    }
-
-    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
-        Temp temp = new Temp();
-        temp.setFisrtName("name");
-        temp.setLastAge("age");
-        System.out.println(transformBeanToXml(temp, TransformEnum.CAMAL_CASE));
-    }
-
 
     /**
      * 将bean根据需要的命名法则转化为xml
