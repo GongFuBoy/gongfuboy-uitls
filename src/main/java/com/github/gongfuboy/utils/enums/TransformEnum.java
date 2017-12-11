@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public enum TransformEnum implements Serializable{
 
+
     // 驼峰命名法
     CAMAL_CASE,
 
