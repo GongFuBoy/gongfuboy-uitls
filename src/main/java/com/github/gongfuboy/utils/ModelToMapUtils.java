@@ -111,9 +111,16 @@ public class ModelToMapUtils {
      */
     private static void setModel(Map<String, String> sourceMap, Object object, Class<?> clazz) throws NoSuchFieldException, IllegalAccessException {
         for (String key : sourceMap.keySet()) {
-            Field field = clazz.getDeclaredField(key);
-            field.setAccessible(true);
-            field.set(object, sourceMap.get(key));
+            Field field = null;
+            try {
+              field = clazz.getDeclaredField(key);
+            } catch (Exception e) {
+                // 什么也不做
+            }
+            if (field != null) {
+                field.setAccessible(true);
+                field.set(object, sourceMap.get(key));
+            }
         }
     }
 }
