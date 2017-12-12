@@ -1,5 +1,7 @@
 package com.github.gongfuboy.utils.pojo;
 
+import com.github.gongfuboy.utils.annotation.IgnoreField;
+
 /**
  * @author GongFuBoy
  * @date 2017/12/5
@@ -9,6 +11,7 @@ public class Human {
 
     private String name;
 
+    @IgnoreField
     private String age;
 
     public String getName() {
