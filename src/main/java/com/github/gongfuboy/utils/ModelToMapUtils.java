@@ -45,19 +45,20 @@ public class ModelToMapUtils {
 
     /**
      * map中的值转化为model
-     * @param clazz
-     * @param sourceMap
+     * @param clazz 需要转化modelclass
+     * @param sourceMap 转化model的源map
+     * @param ignores 需要忽略的key，如果没有可以忽略的，穿null
      * @return
      * @throws Exception
      */
-    public static <T> T mapToModel(Class<T> clazz, Map<String, String> sourceMap) {
+    public static <T> T mapToModel(Class<T> clazz, Map<String, String> sourceMap, List<String> ignores) {
         T t = null;
         try {
             if (sourceMap == null) {
                 throw new NullPointerException("sourceMap could not be null");
             }
             t = clazz.newInstance();
-            setModel(sourceMap, t, clazz);
+            setModel(sourceMap, t, clazz, ignores);
         } catch (Exception e) {
             log.error("map transform to model is failed, failed due to", e);
             throw new RuntimeException(e);
@@ -108,12 +109,17 @@ public class ModelToMapUtils {
      * 设置model中的成员变量的值
      * @param sourceMap
      * @param object
+     * @param ignores
      */
-    private static void setModel(Map<String, String> sourceMap, Object object, Class<?> clazz) throws NoSuchFieldException, IllegalAccessException {
+    private static void setModel(Map<String, String> sourceMap, Object object, Class<?> clazz, List<String> ignores) throws NoSuchFieldException, IllegalAccessException {
         for (String key : sourceMap.keySet()) {
+            if (ignores == null && ignores.size() > 0 && ignores.contains(key)) {
+                continue;
+            }
             Field field = null;
             try {
-              field = clazz.getDeclaredField(key);
+                // 找到成员变量什么都不做
+                field = clazz.getDeclaredField(key);
             } catch (Exception e) {
                 // 什么也不做
             }
