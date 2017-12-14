@@ -105,7 +105,7 @@ public class WeChatOpenIdUtils {
         // 微信服务器需要访问路径
         logger.debug("需要重定向的路径（这个路径是自己服务器的路径）：" + callbackUrl);
         String redirectUrl = wechatVisitUrl.replace("{callbackUrl}", callbackUrl).replace("{appid}", appid);
-        logger.debug("处理之后的重定向路径（这个路径是微信服务器的路径）");
+        logger.debug("处理之后的重定向路径（这个路径是微信服务器的路径）" + redirectUrl);
         try {
             response.sendRedirect(redirectUrl);
         } catch (IOException e) {

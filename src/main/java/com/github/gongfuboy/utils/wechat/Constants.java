@@ -19,5 +19,7 @@ public class Constants {
     public static final String HTTP_CONNECT = "://";
     // 端口连接符
     public static final String PORT_CONNECT = ":";
+    // code表示
+    public static final String CODE = "code";
 
 }
