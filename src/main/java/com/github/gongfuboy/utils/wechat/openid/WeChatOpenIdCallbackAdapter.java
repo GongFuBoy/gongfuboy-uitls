@@ -97,6 +97,8 @@ public class WeChatOpenIdCallbackAdapter {
     }
 
     /**
+     *
+     * @param getOpenIdUrl 获取openid
      * 微信获取openid
      * @return
      */
