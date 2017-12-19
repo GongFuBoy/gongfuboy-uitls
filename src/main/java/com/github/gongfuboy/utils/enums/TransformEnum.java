@@ -1,3 +1,6 @@
+/**
+ * 这个包下的路径存储着全局枚举
+ */
 package com.github.gongfuboy.utils.enums;
 
 import java.io.Serializable;

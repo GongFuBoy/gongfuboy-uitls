@@ -1,6 +1,7 @@
 package com.github.gongfuboy.utils.wechat.openid;
 
 import com.github.gongfuboy.utils.wechat.Constants;
+import com.github.gongfuboy.utils.wechat.common.Callback;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @date 2017/12/13
  * @time 18:57
  */
-public class WeChatOpenIdCallbackAdapter {
+public class WeChatOpenIdCallbackAdapter implements Callback{
 
     private final Log logger = LogFactory.getLog(WeChatOpenIdCallbackAdapter.class);
 
@@ -74,7 +75,8 @@ public class WeChatOpenIdCallbackAdapter {
      * @param request
      * @param response
      */
-    public void callback(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public Map<String, String> callback(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String code = request.getParameter(Constants.CODE);
         String getOpenIdUrl = queryOpenidURI.replace("{appid}", appid).replace("{secret}", key)
@@ -90,6 +92,7 @@ public class WeChatOpenIdCallbackAdapter {
             // 获取之前重定向地址
             String redirectURL = request.getParameter(Constants.GOTO);
             response.sendRedirect(redirectURL);
+            return fromJson;
         } catch (IOException e) {
             logger.error("获取openid失败", e);
             throw new RuntimeException(e);

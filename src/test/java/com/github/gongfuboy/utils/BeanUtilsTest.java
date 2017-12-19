@@ -27,4 +27,5 @@ public class BeanUtilsTest {
     public void testTransformBeanToXml() throws NoSuchFieldException, IllegalAccessException {
         System.out.println(BeanUtils.transformBeanToXml(human, TransformEnum.CAMAL_CASE));
     }
+
 }
