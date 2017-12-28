@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.gongfuboy</groupId>
     <artifactId>gongfuboy-uitls</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>gongfuboy-uitls</name>
     <url>https://github.com/gongfuboy</url>
 
@@ -52,6 +52,11 @@
             <groupId>com.github.wxpay</groupId>
             <artifactId>wxpay-sdk</artifactId>
             <version>0.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
         </dependency>
     </dependencies>
 
