@@ -52,7 +52,7 @@ public class JsTicketUtils {
         AccessToken accessToken = tokenUtils.queryAccessToken();
         if (accessToken != null && accessToken.isAvailable()) {
             String tokenString = accessToken.getAccessToken();
-            String realJsTicketUrl = StringUtils.replace(StringUtils.replace(TICKET_URL, "access_token}", tokenString)
+            String realJsTicketUrl = StringUtils.replace(StringUtils.replace(TICKET_URL, "{access_token}", tokenString)
                     , "{type}", JsApiTypeEnum.jsapi.name());
             // 最大请求三次，成功一次就中断
             for (int i=0; i < 3; i++) {

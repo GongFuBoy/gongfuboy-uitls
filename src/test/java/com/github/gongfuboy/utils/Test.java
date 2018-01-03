@@ -6,4 +6,6 @@ package com.github.gongfuboy.utils;
  * @time 22:41
  */
 public class Test {
+
+    protected String a;
 }

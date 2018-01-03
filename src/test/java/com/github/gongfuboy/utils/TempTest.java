@@ -13,7 +13,10 @@ public class TempTest {
     public void testString() {
         TokenUtils tokenUtils = new TokenUtils("appid1", "key1");
         TokenUtils tokenUtils1 = new TokenUtils("appid2", "key2");
-        System.out.println(tokenUtils.getTOKEN_CACHE().put("temp", "temp"));
-        System.out.println(tokenUtils1.getTOKEN_CACHE());
+        System.out.println(tokenUtils.getTokenCache().put("temp", "temp"));
+        System.out.println(tokenUtils1.getTokenCache());
+
+        Test test = new Test();
+        String a = test.a;
     }
 }
