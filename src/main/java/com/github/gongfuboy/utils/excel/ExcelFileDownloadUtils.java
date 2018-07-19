@@ -1,21 +1,13 @@
 package com.github.gongfuboy.utils.excel;
 
+import com.github.gongfuboy.utils.DateUtils;
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+import org.apache.poi.hssf.usermodel.*;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.hsjry.easy.loan.utils.DateUtil;
-import com.hsjry.loan.mtbank.annotation.Description;
-import com.hsjry.loan.utils.ListUtils;
 
 /**
  * Excel文件下载工具
@@ -43,7 +35,7 @@ public class ExcelFileDownloadUtils {
 		// 创建sheet数量
 		int count = getOneSheetCount(resouce,maxSheetNumber);
 		
-		if (CollectionUtils.isNotEmpty(resouce)) {
+		if (resouce != null && resouce.size() > 0) {
 			for (int i = 0;i < count+1; i++) {
 				List<String> titles = getTitleNames(resouce.get(0));
 				HSSFSheet sheet = hssfWorkbook.createSheet("sheet" + (i+1));
@@ -68,7 +60,7 @@ public class ExcelFileDownloadUtils {
 	 * @throws IllegalArgumentException 
 	 */
 	private static <T> void setContentRows(List<T> targetList, HSSFSheet sheet, HSSFCellStyle style) throws IllegalArgumentException, IllegalAccessException {
-		if (!Objects.equal(null, style) && !Objects.equal(null, style) && CollectionUtils.isNotEmpty(targetList)) {
+		if (!Objects.equal(null, style) && !Objects.equal(null, style) && targetList != null && targetList.size() > 0) {
 			for (int i=0; i < targetList.size(); i++) {
 				HSSFRow row = sheet.createRow(i+1);
 				Object[] fields = getFields(targetList.get(i));
@@ -80,7 +72,7 @@ public class ExcelFileDownloadUtils {
 					Object values = realField.get(targetList.get(i));
 					if (!Objects.equal(null, values)) {
 						if (values instanceof Date) {
-							String date = DateUtil.formatDate((Date)values, "yyyy-MM-dd HH:mm:ss");
+							String date = DateUtils.formatDate("yyyy-MM-dd HH:mm:ss", (Date)values);
 							cell.setCellValue(date);
 						} else {
 							cell.setCellValue(values.toString());
@@ -132,7 +124,7 @@ public class ExcelFileDownloadUtils {
 	 * @param titles
 	 */
 	private static void setFirstRow(HSSFRow row,List<String> titles,HSSFCellStyle style) {
-		if (CollectionUtils.isNotEmpty(titles) && !Objects.equal(null, row)) {
+		if (titles != null && titles.size() > 0 && !Objects.equal(null, row)) {
 			for (int i = 0; i < titles.size(); i++) {
 				HSSFCell cell = row.createCell(i);
 				cell.setCellValue(titles.get(i));
@@ -150,7 +142,7 @@ public class ExcelFileDownloadUtils {
 	 */
 	private static <T> int getOneSheetCount(List<T> resouce,int maxSheetNumber) {
 		int result = 0;
-		if (CollectionUtils.isNotEmpty(resouce)) {
+		if (resouce != null && resouce.size() > 0) {
 			result = resouce.size()/maxSheetNumber;
 		}
 		return result;

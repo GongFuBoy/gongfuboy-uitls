@@ -35,7 +35,7 @@ public class TestClass {
     public static void main(String[] args) {
         List<Map<String, String>> before = new ArrayList<Map<String, String>>();
 
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("1", "1");
         before.add(hashMap);
         System.out.println(new Gson().toJson(before));
