@@ -3,8 +3,10 @@ package com.github.gongfuboy.utils.excel;
 import com.github.gongfuboy.utils.DateUtils;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.*;
 
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +28,7 @@ public class ExcelFileDownloadUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static <T> HSSFWorkbook createHSSFWorkbook(List<T> resouce,int maxSheetNumber) throws Exception {
+	public static <T> void createHSSFWorkbook(List<T> resouce, int maxSheetNumber, FileOutputStream fileOutputStream) throws Exception {
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
 		// 设置Excel文档的样式
 		HSSFCellStyle style = hssfWorkbook.createCellStyle();
@@ -47,7 +49,8 @@ public class ExcelFileDownloadUtils {
 				setContentRows(targetList, sheet, style);
 			}
 		}
-		return hssfWorkbook;
+		hssfWorkbook.write(fileOutputStream);
+		IOUtils.closeQuietly(fileOutputStream);
 	}
 	
 	/**

@@ -2,7 +2,6 @@ package com.github.gongfuboy.utils.excel;
 
 import com.github.gongfuboy.utils.pojo.Student;
 import com.google.common.collect.Lists;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
@@ -30,9 +29,6 @@ public class ExcelFileDownloadUtilsTest {
     @Test
     public void test() throws Exception {
         List<Student> students = getStudents();
-        HSSFWorkbook hssfWorkbook = ExcelFileDownloadUtils.createHSSFWorkbook(students, Integer.MAX_VALUE);
-        FileOutputStream fout = new FileOutputStream("D:/students.xls");
-        hssfWorkbook.write(fout);
-        fout.close();
+        ExcelFileDownloadUtils.createHSSFWorkbook(students, Integer.MAX_VALUE, new FileOutputStream("D:/students.xls"));
     }
 }
