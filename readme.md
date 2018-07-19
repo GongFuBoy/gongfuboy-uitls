@@ -11,6 +11,7 @@
 |com.github.gongfuboy.uitls|项目根目录|
 |com.github.gongfuboy.uitls.annotation|项目存放注解类路径|
 |com.github.gongfuboy.uitls.enums|整个工程存放枚举路径|
+|com.github.gongfuboy.uitls.excel|excel相关工具|
 |com.github.gongfuboy.uitls.wechat|微信支付等工具路径|
 |com.github.gongfuboy.uitls.wechat.common|微信工具公共包|
 |com.github.gongfuboy.uitls.wechat.openid|微信获取openid包路径|

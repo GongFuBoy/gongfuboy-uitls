@@ -105,7 +105,7 @@ public class ExcelFileDownloadUtils {
 		List<String> resultList = null;
 		if (!Objects.equal(null, t)) {
 			resultList = Lists.newArrayList();
-			Class<? extends Object> clazz = t.getClass();
+			Class clazz = t.getClass();
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				Description description = field.getAnnotation(Description.class);
