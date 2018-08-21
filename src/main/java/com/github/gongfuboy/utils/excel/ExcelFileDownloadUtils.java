@@ -1,13 +1,12 @@
 package com.github.gongfuboy.utils.excel;
 
 import com.github.gongfuboy.utils.DateUtils;
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.*;
 
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class ExcelFileDownloadUtils {
 	 * @throws IllegalArgumentException 
 	 */
 	private static <T> void setContentRows(List<T> targetList, HSSFSheet sheet, HSSFCellStyle style) throws IllegalArgumentException, IllegalAccessException {
-		if (!Objects.equal(null, style) && !Objects.equal(null, style) && targetList != null && targetList.size() > 0) {
+		if (style != null && targetList != null && targetList.size() > 0) {
 			for (int i=0; i < targetList.size(); i++) {
 				HSSFRow row = sheet.createRow(i+1);
 				Object[] fields = getFields(targetList.get(i));
@@ -73,7 +72,7 @@ public class ExcelFileDownloadUtils {
 					cell.setCellStyle(style);
 					realField.setAccessible(true);
 					Object values = realField.get(targetList.get(i));
-					if (!Objects.equal(null, values)) {
+					if (values != null) {
 						if (values instanceof Date) {
 							String date = DateUtils.formatDate("yyyy-MM-dd HH:mm:ss", (Date)values);
 							cell.setCellValue(date);
@@ -87,11 +86,11 @@ public class ExcelFileDownloadUtils {
 	}
 	
 	private static <T> Object[] getFields(T t) {
-		List<Field> resultList = Lists.newArrayList();
+		List<Field> resultList = new ArrayList<>();
 		Field[] fields = t.getClass().getDeclaredFields();
 		for (Field tempField : fields) {
 			Description description = tempField.getAnnotation(Description.class);
-			if (!Objects.equal(null, description)) {
+			if (description != null) {
 				resultList.add(tempField);
 			}
 		}
@@ -106,13 +105,13 @@ public class ExcelFileDownloadUtils {
 	 */
 	private static <T> List<String> getTitleNames(T t) {
 		List<String> resultList = null;
-		if (!Objects.equal(null, t)) {
-			resultList = Lists.newArrayList();
+		if (t != null) {
+			resultList = new ArrayList<>();
 			Class clazz = t.getClass();
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				Description description = field.getAnnotation(Description.class);
-				if (!Objects.equal(null, description)) {
+				if (description != null) {
 					resultList.add(description.value());
 				}
 			}
@@ -127,7 +126,7 @@ public class ExcelFileDownloadUtils {
 	 * @param titles
 	 */
 	private static void setFirstRow(HSSFRow row,List<String> titles,HSSFCellStyle style) {
-		if (titles != null && titles.size() > 0 && !Objects.equal(null, row)) {
+		if (titles != null && titles.size() > 0 && row != null) {
 			for (int i = 0; i < titles.size(); i++) {
 				HSSFCell cell = row.createCell(i);
 				cell.setCellValue(titles.get(i));
@@ -150,26 +149,5 @@ public class ExcelFileDownloadUtils {
 		}
 		return result;
 	}
-	
-	/*
-	public static void main(String[] args) throws Exception {
-		List<Student> students = getStudents();
-		HSSFWorkbook hssfWorkbook = createHSSFWorkbook(students, 2);
-		FileOutputStream fout = new FileOutputStream("D:/students.xls");
-		hssfWorkbook.write(fout);
-		fout.close();
-	}
-	
-	private static List<Student> getStudents() {
-		List<Student> students = Lists.newArrayList();
-		Student user1 = new Student(1, null, 16, new Date());
-		Student user2 = new Student(2, "李四", 17, new Date());
-		Student user3 = new Student(3, "王五", 26, new Date());
-		students.add(user1);
-		students.add(user2);
-		students.add(user3);
-		return students;
-	}
-	*/
 	
 }
