@@ -124,18 +124,6 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.2</version>
-                <configuration>
-                    <source>${scala-version}</source>
-                    <target>${scala-version}</target>
-                    <verbose>false</verbose>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <executions>
                     <execution>
