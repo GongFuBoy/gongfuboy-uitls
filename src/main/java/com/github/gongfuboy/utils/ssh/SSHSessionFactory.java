@@ -21,7 +21,7 @@ public class SSHSessionFactory {
 
     private int localApplicationPort;
 
-    private int SSHRemotePort = 22;
+    private int SSHRemotePort;
 
     private String SSHRemoteIP;
 
@@ -32,13 +32,6 @@ public class SSHSessionFactory {
     private int remoteApplicationPort;
 
     private String remoteApplicationIP;
-
-    /**
-     * 私有化构造方法
-     */
-    private SSHSessionFactory() {
-
-    }
 
     public SSHSessionFactory(int localApplicationPort, int SSHRemotePort, String SSHRemoteIP, String SSHRemoteUsername, String SSHRemotePassword, int remoteApplicationPort, String remoteApplicationIP) {
         super();

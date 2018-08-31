@@ -1,10 +1,10 @@
 package com.github.gongfuboy.utils;
 
 import com.github.gongfuboy.utils.pojo.Student;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class Test {
     }
 
     private static List<Student> getStudents() {
-        List<Student> students = Lists.newArrayList();
+        List<Student> students = new ArrayList<>();
         Student user1 = new Student(1, null, new Date());
         Student user2 = new Student(2, "李四", new Date());
         Student user3 = new Student(3, "王五", new Date());
