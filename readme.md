@@ -19,4 +19,4 @@
 
 3. 感谢名单
 
-    感谢[DeelFeel](https://github.com/DeelFeel)同学新增的Excel工具的完善
+    感谢[DeelFeel](https://github.com/DeelFeel)同学新增的Excel工具的分页功能
