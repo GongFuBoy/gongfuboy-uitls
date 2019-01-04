@@ -1,14 +1,13 @@
 package com.github.gongfuboy.utils.excel;
 
 import com.github.gongfuboy.utils.DateUtils;
+import com.github.gongfuboy.utils.excel.bean.WorkBookSources;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.*;
 
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Excel文件下载工具
@@ -48,6 +47,34 @@ public class ExcelFileDownloadUtils {
 				setContentRows(targetList, sheet, style);
 			}
 		}
+		hssfWorkbook.write(fileOutputStream);
+		IOUtils.closeQuietly(fileOutputStream);
+	}
+
+	/**
+	 * @param workBookSourcesList (sheet,sourceList)
+	 * @return
+	 * @throws Exception
+	 */
+	public static <T> void createHSSFWorkbookWithSheet(List<WorkBookSources> workBookSourcesList, FileOutputStream fileOutputStream) throws Exception {
+		HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+		// 设置Excel文档的样式
+		HSSFCellStyle style = hssfWorkbook.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		workBookSourcesList.stream().forEach(it -> {
+			//获取列名
+			List<String> titles = getTitleNames(it.getSourcesList().get(0));
+			HSSFSheet sheet = hssfWorkbook.createSheet(it.getSheetName());
+			HSSFRow row = sheet.createRow(0);
+			// 创建每一个sheet的第一行
+			setFirstRow(row, titles, style);
+			try {
+				setContentRows(it.getSourcesList(), sheet, style);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		});
 		hssfWorkbook.write(fileOutputStream);
 		IOUtils.closeQuietly(fileOutputStream);
 	}
