@@ -16,3 +16,7 @@
 |com.github.gongfuboy.uitls.wechat.common|微信工具公共包|
 |com.github.gongfuboy.uitls.wechat.openid|微信获取openid包路径|
 |com.github.gongfuboy.uitls.wechat.recharge|微信微信支付包路径|
+
+3. 感谢名单
+
+    感谢[DeelFeel](https://github.com/DeelFeel)同学新增的Excel工具的完善
