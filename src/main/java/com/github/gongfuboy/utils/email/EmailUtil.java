@@ -1,27 +1,16 @@
 package com.github.gongfuboy.utils.email;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.Properties;
+import com.sun.mail.util.MailSSLSocketFactory;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
-import com.sun.mail.util.MailSSLSocketFactory;
-import org.apache.commons.lang3.StringUtils;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Properties;
 
 
 /**
@@ -43,16 +32,14 @@ public class EmailUtil {
      * @return boolean
      */
     public static boolean sendMail(String from, String password, String to, String subject, String msg, List<String> fileNames, String host) {
+        boolean result = false;
         if (StringUtils.isEmpty(to)) {
-            return false;
+            throw new IllegalArgumentException("to address is wrong");
         }
-
         // 获取系统属性
         Properties properties = System.getProperties();
-
         // 设置邮件服务器
         properties.setProperty("mail.smtp.host", host);
-
         properties.put("mail.smtp.auth", "true");
         MailSSLSocketFactory sf = null;
         try {
@@ -69,29 +56,21 @@ public class EmailUtil {
                 return new PasswordAuthentication(from, password); // 发件人邮件用户名、密码
             }
         });
-
         try {
             // 创建默认的 MimeMessage 对象
             MimeMessage message = new MimeMessage(session);
-
             // Set From: 头部头字段
             message.setFrom(new InternetAddress(from));
-
             // Set To: 头部头字段
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
             // Set Subject: 主题文字
             message.setSubject(subject);
-
             // 创建消息部分
             BodyPart messageBodyPart = new MimeBodyPart();
-
             // 消息
             messageBodyPart.setText(msg);
-
             // 创建多重消息
             Multipart multipart = new MimeMultipart();
-
             // 设置文本消息部分
             multipart.addBodyPart(messageBodyPart);
 
@@ -105,19 +84,15 @@ public class EmailUtil {
                 messageBodyPartForFile.setFileName(MimeUtility.encodeText(source.getName()));
                 multipart.addBodyPart(messageBodyPartForFile);
             }
-
             // 发送完整消息
             message.setContent(multipart);
-
             // 发送消息
             Transport.send(message);
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            result = true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return false;
+        return result;
     }
 
 }
