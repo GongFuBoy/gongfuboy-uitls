@@ -1,8 +1,6 @@
 package com.github.gongfuboy.utils.email;
 
 import com.sun.mail.util.MailSSLSocketFactory;
-import org.apache.commons.lang3.StringUtils;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -24,17 +22,17 @@ public class EmailUtil {
      * 发送带附件的邮件
      * @param from 发件人邮箱
      * @param password 发件人邮箱密码
-     * @param to 收件人邮箱
+     * @param tos 收件人邮箱
      * @param subject 邮件主题
      * @param msg 邮件内容
      * @param fileNames 附件地址List
      * @param host 发送邮箱服务器, etc: smtp.exmail.qq.com/smtp.163.com
      * @return boolean
      */
-    public static boolean sendMail(String from, String password, String to, String subject, String msg, List<String> fileNames, String host) {
+    public static boolean sendMail(String from, String password, List<String> tos, String subject, String msg, List<String> fileNames, String host) {
         boolean result = false;
-        if (StringUtils.isEmpty(to)) {
-            throw new IllegalArgumentException("to address is wrong");
+        if (tos.size() < 1) {
+            throw new IllegalArgumentException("to address is must");
         }
         // 获取系统属性
         Properties properties = System.getProperties();
@@ -62,7 +60,11 @@ public class EmailUtil {
             // Set From: 头部头字段
             message.setFrom(new InternetAddress(from));
             // Set To: 头部头字段
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            Address[] a = new Address[tos.size()];
+            for (int i = 0; i < tos.size(); i++) {
+                a[i] = new InternetAddress(tos.get(i));
+            }
+            message.addRecipients(Message.RecipientType.TO, a);
             // Set Subject: 主题文字
             message.setSubject(subject);
             // 创建消息部分

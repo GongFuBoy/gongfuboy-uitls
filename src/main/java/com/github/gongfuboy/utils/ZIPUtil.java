@@ -1,7 +1,5 @@
 package com.github.gongfuboy.utils;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -25,18 +23,14 @@ public class ZIPUtil {
             throw new RuntimeException(srcFilePath + "不存在");
         }
         File zipFile = new File(destFilePath);
-        FileOutputStream fos = null;
-        ZipOutputStream zos = null;
         try {
-            fos = new FileOutputStream(zipFile);
-            zos = new ZipOutputStream(fos);
+            FileOutputStream fos = new FileOutputStream(zipFile);
+            ZipOutputStream zos = new ZipOutputStream(fos);
             String baseDir = "";
             compressbyType(src, zos, baseDir);
+            zos.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(fos);
-            IOUtils.closeQuietly(zos);
+            e.printStackTrace();
         }
     }
 
@@ -65,11 +59,10 @@ public class ZIPUtil {
      * 压缩文件
      */
     private static void compressFile(File file, ZipOutputStream zos, String baseDir) {
-        BufferedInputStream bis = null;
         if (!file.exists())
             return;
         try {
-            bis = new BufferedInputStream(new FileInputStream(file));
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             ZipEntry entry = new ZipEntry(baseDir + file.getName());
             zos.putNextEntry(entry);
             int count;
@@ -77,10 +70,9 @@ public class ZIPUtil {
             while ((count = bis.read(buf)) != -1) {
                 zos.write(buf, 0, count);
             }
+            bis.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(bis);
+            e.printStackTrace();
         }
     }
 
@@ -95,7 +87,7 @@ public class ZIPUtil {
             try {
                 zos.putNextEntry(new ZipEntry(baseDir + dir.getName() + File.separator));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
         for (File file : files) {
