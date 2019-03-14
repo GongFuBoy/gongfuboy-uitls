@@ -7,7 +7,7 @@
 2. 代码包结构简介
 
 |包结构路径|简介|
-|---|--|
+|---|---|
 |com.github.gongfuboy.uitls|项目根目录|
 |com.github.gongfuboy.uitls.annotation|项目存放注解类路径|
 |com.github.gongfuboy.uitls.enums|整个工程存放枚举路径|
