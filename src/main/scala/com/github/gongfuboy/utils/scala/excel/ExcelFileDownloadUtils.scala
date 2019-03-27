@@ -1,8 +1,10 @@
 package com.github.gongfuboy.utils.scala.excel
 
 import java.io.FileOutputStream
+import java.lang.reflect.Field
 
-import com.github.gongfuboy.utils.excel.Description
+import com.github.gongfuboy.utils.enums.MergeCellEnum
+import com.github.gongfuboy.utils.excel.{Description, MergeCell}
 import org.apache.poi.hssf.usermodel._
 import org.apache.poi.ss.usermodel.CellStyle
 
@@ -86,6 +88,28 @@ object ExcelFileDownloadUtils {
         })
       }
     })
+
+    /**合并单元格*/
+    val mergeCellFirstLevel: List[(Option[Field], Any)] = targetList.map(sourceObject => {
+      val mergeCellFirstLevelField = sourceObject.getClass.getDeclaredFields.find(x => x.getAnnotation(classOf[MergeCell]) != null
+        && x.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.FIRST_LEVEL))
+      (mergeCellFirstLevelField, sourceObject)
+    })
+
+    if (mergeCellFirstLevel.head._1.isDefined) {
+      val mergeCellFirstLevelValues: List[String] = mergeCellFirstLevel.map(x => x._1.get.get(x._2).toString)
+      val groupedMergeCell: Map[String, List[String]] = mergeCellFirstLevelValues.groupBy(x => x)
+      val firstLevelIndex = targetList.head.getClass.getDeclaredFields.zipWithIndex.find({
+        case (sourceField, _) => {
+          sourceField.getAnnotation(classOf[MergeCell]) != null && sourceField.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.FIRST_LEVEL)
+        }
+      }).getOrElse(throw new RuntimeException("未知异常, 无法找到对应的field index"))._2
+      groupedMergeCell.foreach({
+        case (_, mergeList) => {
+
+        }
+      })
+    }
   }
 
 }
