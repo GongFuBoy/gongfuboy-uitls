@@ -7,7 +7,7 @@ public enum MergeCellEnum {
 
     FIRST_LEVEL,
 
-    SECOND_LEVEN,
+    SECOND_LEVEL,
 
     THIRD_LEVEL;
 }
