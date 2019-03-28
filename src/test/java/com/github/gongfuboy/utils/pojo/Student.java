@@ -1,6 +1,7 @@
 package com.github.gongfuboy.utils.pojo;
 
 import com.github.gongfuboy.utils.excel.Description;
+import com.github.gongfuboy.utils.excel.MergeCell;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  */
 public class Student {
 
+    @MergeCell
     @Description("年龄")
     private int age;
 

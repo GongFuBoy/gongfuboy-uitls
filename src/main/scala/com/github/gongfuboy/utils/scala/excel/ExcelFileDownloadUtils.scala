@@ -5,8 +5,10 @@ import java.lang.reflect.Field
 
 import com.github.gongfuboy.utils.enums.MergeCellEnum
 import com.github.gongfuboy.utils.excel.{Description, MergeCell}
+import org.apache.commons.io.IOUtils
 import org.apache.poi.hssf.usermodel._
 import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.util.CellRangeAddress
 
 /**
   * Created by ZhouLiMing on 2019/1/31.
@@ -40,6 +42,8 @@ object ExcelFileDownloadUtils {
         setContentRows(sheetSourceList, sheet, cellStyle)
       }
     })
+    workbook.write(fileOutputStream)
+    IOUtils.closeQuietly(fileOutputStream)
   }
 
   /**
@@ -97,16 +101,28 @@ object ExcelFileDownloadUtils {
     })
 
     if (mergeCellFirstLevel.head._1.isDefined) {
-      val mergeCellFirstLevelValues: List[String] = mergeCellFirstLevel.map(x => x._1.get.get(x._2).toString)
-      val groupedMergeCell: Map[String, List[String]] = mergeCellFirstLevelValues.groupBy(x => x)
+      val mergeCellFirstLevelValues: List[String] = mergeCellFirstLevel.map(x => {
+        x._1.get.setAccessible(true)
+        x._1.get.get(x._2).toString
+      })
+      val groupedMergeCell: List[(String, List[String])] = mergeCellFirstLevelValues.groupBy(x => x).toList.sortBy(_._1)
       val firstLevelIndex = targetList.head.getClass.getDeclaredFields.zipWithIndex.find({
         case (sourceField, _) => {
           sourceField.getAnnotation(classOf[MergeCell]) != null && sourceField.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.FIRST_LEVEL)
         }
       }).getOrElse(throw new RuntimeException("未知异常, 无法找到对应的field index"))._2
-      groupedMergeCell.foreach({
-        case (_, mergeList) => {
-
+      val iterator: List[List[List[String]]] = groupedMergeCell.map(_._2).inits.filter(!_.isEmpty).toList.reverse
+      iterator.map(x => x.map(_.size).sum).sliding(2).zipWithIndex.foreach({
+        case (skipList, index) => {
+          if (index == 0) {
+            val cellRangeAddress = new CellRangeAddress(1, skipList(0), firstLevelIndex, firstLevelIndex)
+            sheet.addMergedRegion(cellRangeAddress)
+            val secondCellRangeAddress = new CellRangeAddress(skipList(0) + 1, skipList(1), firstLevelIndex, firstLevelIndex)
+            sheet.addMergedRegion(secondCellRangeAddress)
+          } else {
+            val cellRangeAddress = new CellRangeAddress(skipList(0) + 1, skipList(1), firstLevelIndex, firstLevelIndex)
+            sheet.addMergedRegion(cellRangeAddress)
+          }
         }
       })
     }
