@@ -93,6 +93,95 @@ object ExcelFileDownloadUtils {
       }
     })
 
+  }
+
+  /**
+    * 合并所有级别的单元格
+    * @param targetList
+    * @param sheet
+    * @tparam T
+    */
+  private def mergeAllLevel[T](targetList: List[T], sheet: HSSFSheet) = {
+    val allLevelFieldTuples: List[(Option[Field], Option[Field], Option[Field], Any)] = targetList.map(sourceObject => {
+      val mergeCellFirstLevelField = sourceObject.getClass.getDeclaredFields.find(x => x.getAnnotation(classOf[MergeCell]) != null
+        && x.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.FIRST_LEVEL))
+      val mergeCellSecondLevelField = sourceObject.getClass.getDeclaredFields.find(x => x.getAnnotation(classOf[MergeCell]) != null
+        && x.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.SECOND_LEVEL))
+      val mergeCellThirdLevelField = sourceObject.getClass.getDeclaredFields.find(x => x.getAnnotation(classOf[MergeCell]) != null
+        && x.getAnnotation(classOf[MergeCell]).value().equals(MergeCellEnum.THIRD_LEVEL))
+      (mergeCellFirstLevelField, mergeCellSecondLevelField, mergeCellThirdLevelField, sourceObject)
+    })
+    /**合并第一级别单元格*/
+    val firstLevelFieldOption = allLevelFieldTuples.head._1
+    if (firstLevelFieldOption.isDefined) {
+      /**确定FirstLevel在Excel中的index*/
+      val (_, firstLevelExcelIndex) = targetList.head.getClass.getDeclaredFields.zipWithIndex.find(x => {
+        val mergeCell = x._1.getAnnotation(classOf[MergeCell])
+        mergeCell != null && mergeCell.value().equals(MergeCellEnum.FIRST_LEVEL)
+      }).getOrElse(throw new NullPointerException("can not find first level field index"))
+      val firstLevelFieldTuples: List[(Field, Any, Int)] = allLevelFieldTuples.zipWithIndex.map({
+        case ((firstLevelField, _, _, sourceObject), index) => (firstLevelField.get, sourceObject, index)
+      })
+      mergeCell(sheet, firstLevelExcelIndex, firstLevelFieldTuples)
+    }
+    /**合并第二级别单元格*/
+    val secondLevelFieldOption = allLevelFieldTuples.head._2
+    if (secondLevelFieldOption.isDefined) {
+      /**确定SecondLevel在Excel中的index*/
+      val (_, secondLevelExcelIndex) = targetList.head.getClass.getDeclaredFields.zipWithIndex.find(x => {
+        val mergeCell = x._1.getAnnotation(classOf[MergeCell])
+        mergeCell != null && mergeCell.value().equals(MergeCellEnum.SECOND_LEVEL)
+      }).getOrElse(throw new NullPointerException("can not find first level field index"))
+      val secondLevelFieldTuples: List[(Field, Any, Int)] = allLevelFieldTuples.zipWithIndex.map({
+        case ((_, secondLevelField, _, sourceObject), index) => (secondLevelField.get, sourceObject, index)
+      })
+      mergeCell(sheet, secondLevelExcelIndex, secondLevelFieldTuples)
+    }
+    /**合并第三级别单元格*/
+    val thirdLevelFieldOption = allLevelFieldTuples.head._2
+    if (thirdLevelFieldOption.isDefined) {
+      /**确定ThirdLevel在Excel中的index*/
+      val (_, thirdLevelExcelIndex) = targetList.head.getClass.getDeclaredFields.zipWithIndex.find(x => {
+        val mergeCell = x._1.getAnnotation(classOf[MergeCell])
+        mergeCell != null && mergeCell.value().equals(MergeCellEnum.THIRD_LEVEL)
+      }).getOrElse(throw new NullPointerException("can not find first level field index"))
+      val thirdLevelFieldTuples: List[(Field, Any, Int)] = allLevelFieldTuples.zipWithIndex.map({
+        case ((_, _, thirdLevelField, sourceObject), index) => (thirdLevelField.get, sourceObject, index)
+      })
+      mergeCell(sheet, thirdLevelExcelIndex, thirdLevelFieldTuples)
+    }
+  }
+
+  private def mergeCell(sheet: HSSFSheet, levelExcelIndex: Int, levelFieldIndexTuples: List[(Field, Any, Int)]) = {
+    var levelValue: Object = null
+    var levelCount = 0
+    levelFieldIndexTuples.foreach({
+      case (firstLevelField, sourceObject, index) => {
+        if (index == 0) {
+          firstLevelField.setAccessible(true)
+          levelValue = firstLevelField.get(sourceObject)
+        }
+        if (levelValue != null && levelValue.equals({
+          firstLevelField.setAccessible(true)
+          firstLevelField.get(sourceObject)
+        }) && index != 0) levelCount = levelCount + 1
+        else {
+          val cellRangeAddress = new CellRangeAddress(index - levelCount, index , levelExcelIndex, levelExcelIndex)
+          sheet.addMergedRegion(cellRangeAddress)
+          levelCount = 0
+          levelValue = firstLevelField.get(sourceObject)
+        }
+      }
+    })
+  }
+
+  /**
+    * 合并第一个级别的单元格
+    * @param targetList
+    * @param sheet
+    * @tparam T
+    */
+  private def mergeFirstLevel[T](targetList: List[T], sheet: HSSFSheet) = {
     /**合并单元格*/
     val mergeCellFirstLevel: List[(Option[Field], Any)] = targetList.map(sourceObject => {
       val mergeCellFirstLevelField = sourceObject.getClass.getDeclaredFields.find(x => x.getAnnotation(classOf[MergeCell]) != null
