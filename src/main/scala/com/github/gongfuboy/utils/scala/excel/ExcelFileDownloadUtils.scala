@@ -131,7 +131,7 @@ object ExcelFileDownloadUtils {
       val (_, secondLevelExcelIndex) = targetList.head.getClass.getDeclaredFields.zipWithIndex.find(x => {
         val mergeCell = x._1.getAnnotation(classOf[MergeCell])
         mergeCell != null && mergeCell.value().equals(MergeCellEnum.SECOND_LEVEL)
-      }).getOrElse(throw new NullPointerException("can not find first level field index"))
+      }).getOrElse(throw new NullPointerException("can not find second level field index"))
       val secondLevelFieldTuples: List[(Field, Any, Int)] = allLevelFieldTuples.zipWithIndex.map({
         case ((_, secondLevelField, _, sourceObject), index) => (secondLevelField.get, sourceObject, index)
       })
@@ -144,7 +144,7 @@ object ExcelFileDownloadUtils {
       val (_, thirdLevelExcelIndex) = targetList.head.getClass.getDeclaredFields.zipWithIndex.find(x => {
         val mergeCell = x._1.getAnnotation(classOf[MergeCell])
         mergeCell != null && mergeCell.value().equals(MergeCellEnum.THIRD_LEVEL)
-      }).getOrElse(throw new NullPointerException("can not find first level field index"))
+      }).getOrElse(throw new NullPointerException("can not find third level field index"))
       val thirdLevelFieldTuples: List[(Field, Any, Int)] = allLevelFieldTuples.zipWithIndex.map({
         case ((_, _, thirdLevelField, sourceObject), index) => (thirdLevelField.get, sourceObject, index)
       })
